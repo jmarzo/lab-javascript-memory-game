@@ -46,15 +46,20 @@ window.addEventListener("load", (event) => {
     card.addEventListener("click", () => {
       // TODO: write some code here
 
-      //let allcards = document.querySelectorAll(".cards");
+      card.classList.add("turned");
+      console.log(`Card clicked: ${card}`);
+
+      let allcards = document.querySelectorAll(".card");
       let flippedCards = 0;
       let card1;
       let card2;
 
-      /*for (let i = 0; i < allcards.length; i++) {
+      for (let i = 0; i < allcards.length; i++) {
         // check if we have 2 cards flipped
-        if (allcards[i].classList.contains("turned")) {
-          console.log("aaaaa");
+        if (
+          allcards[i].classList.contains("turned") &&
+          !allcards[i].classList.contains("blocked")
+        ) {
           flippedCards++;
           if (flippedCards == 1) {
             card1 = allcards[i];
@@ -62,14 +67,39 @@ window.addEventListener("load", (event) => {
             card2 = allcards[i];
           }
         }
-      }*/
+      }
 
-      /* if (checkIfPair(card1, card2)) {
-        // if the two cards are equal we need to block them
-      }*/
+      if (flippedCards == 2) {
+        //  if I have 2 cards check if they are equals
+        if (
+          memoryGame.checkIfPair(
+            card1.getAttribute("data-card-name"),
+            card2.getAttribute("data-card-name")
+          )
+        ) {
+          card1.classList.add("blocked");
+          card2.classList.add("blocked");
+        } else {
+          // remove the turned class, let's keep only blocked
+          setTimeout(() => {
+            for (let i = 0; i < allcards.length; i++) {
+              // check if we have 2 cards flipped
+              if (
+                allcards[i].classList.contains("turned") &&
+                !allcards[i].classList.contains("blocked")
+              ) {
+                allcards[i].classList.remove("turned");
+              }
+            }
+          }, 1000);
+        }
+        //console.log(memoryGame.pairsClicked);
+        //console.log(memoryGame.pairsGuessed);
+      }
 
-      card.classList.add("turned");
-      console.log(`Card clicked: ${card}`);
+      if (memoryGame.checkIfFinished()) {
+        location.reload();
+      }
     });
   });
 });
